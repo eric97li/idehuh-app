@@ -20,6 +20,8 @@ export default class QuestionIdehuhs extends Component{
       questionToEditID: "",
       replyQuestion: "",
       questionToReplyID: "",
+      rating: "",
+      rated: ""
     }
 
   }
@@ -62,10 +64,12 @@ export default class QuestionIdehuhs extends Component{
     this.setState({ editModalVisible: visible });
   }
 
-  setReplyModalVisible = (visible, currQuestion, questionID) => {
+  setReplyModalVisible = (visible, currQuestion, rating, rated, questionID) => {
     this.setState({ replyModalVisible: visible});
     this.setState({ question: currQuestion});
     this.setState({ questionToReplyID: questionID});
+    this.setState({ rating: rating});
+    this.setState({ rated: rated});
   }
 
   manageReplyModalVisible = (visible) => {
@@ -109,6 +113,7 @@ export default class QuestionIdehuhs extends Component{
             advice: [],
             adviceObjs: [],
             rating: 0,
+            rated: "",
             // date: moment().format('YYYY-MM-DD HH:MM:SS'),
             date: new Date(),
             keywords: []
@@ -201,7 +206,7 @@ export default class QuestionIdehuhs extends Component{
           for(let i = 0; i < questions.length; i++) {
             if((questions[i].question != question) && (questions[i].id != id)) {
               //readjust the indexes after question removal
-              ideas[i].id = indexer;
+              questions[i].id = indexer;
               indexer = indexer + 1;
 
               newQuestionsArray = newQuestionsArray.concat(questions[i])
@@ -348,7 +353,7 @@ export default class QuestionIdehuhs extends Component{
 
   }
 
-  replyQuestion = (reply, id) => {
+  replyQuestion = (reply, ratingQuestion, ratedQuestion, id) => {
 
     return fetch('https://idehuh-api.herokuapp.com/users', {
       method: 'GET', 
@@ -385,6 +390,7 @@ export default class QuestionIdehuhs extends Component{
             questionInfo: this.state.questionInfo,
             advice: reply,
             rating: 0,
+            rated: "",
             date: new Date(),
             keywords: []
           };
@@ -411,7 +417,8 @@ export default class QuestionIdehuhs extends Component{
             questionInfo: this.state.questionInfo,
             advice: advice,
             adviceObjs: adviceObjs,
-            rating: 0,
+            rating: ratingQuestion,
+            rated: ratedQuestion,
             // date: moment().format('YYYY-MM-DD HH:MM:SS'),
             date: new Date(),
             keywords: []
@@ -475,6 +482,201 @@ export default class QuestionIdehuhs extends Component{
 
     })
     
+
+  }
+
+
+  incrementQuestionRating = (question, questionInfo, questionRating, questionRated, id) => {
+
+    return fetch('https://idehuh-api.herokuapp.com/users', {
+      method: 'GET', 
+    })
+    .then(response => response.json())
+    .then(response => {
+      // console.log(response[0].name)
+
+      //users begin at id 1
+
+      for(let i = 1; i < response.length; i++) {
+        // console.log(response[i].username)
+        // console.log(response[i].password)
+        if(response[i].username==this.props.username) {
+          // alert(response[i].id)
+
+          let name = response[i].name;
+          let ID = response[i].id;
+          let password = response[i].password;
+          let rating = response[i].rating;
+          let messages = [];
+          let ideas = this.props.ideas;
+          let addQuestionURL = "https://idehuh-api.herokuapp.com/users/" + ID
+
+          let questions = response[i].questions;
+
+          //increment the idea rating of the user
+
+          for(let i = 0; i < questions.length; i++) {
+            //catch if not rated or if was downvoted
+            if(questions[i].id == id && ((questionRated == "") || (questionRated=="1D"))) {
+              questions[i].rating = questionRating + 1;
+              //if was downvoted increment an additional to compensate for the downvote and correct to actual upvote rating
+              if(questionRated == "1D") {
+                questions[i].rating = questionRating + 2;
+              }
+              //was rated with an upvote
+              questions[i].rated = "1U";
+              questions[i].question = question
+              questions[i].questionInfo = questionInfo
+            }
+            
+          }
+
+          //make put request to update the ideas array with the changed input
+          const questionObj = {
+            id: ID,
+            name: name,
+            username: this.props.username,
+            password: password,
+            rating: rating,
+            messages: messages,
+            questions: questions,
+            ideas: ideas,
+            followers: [],
+            following: [],
+            savedQuestions: [],
+            savedIdeas: []
+          }
+
+          return fetch(addQuestionURL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(questionObj)
+          })
+          .then(response => {
+            return fetch('https://idehuh-api.herokuapp.com/users', {
+              method: 'GET',
+            })
+            .then(response => response.json())
+            .then(response => {
+              for(let i = 1; i < response.length; i++) {
+                if(response[i].username==this.props.username){
+                  this.setState({questions: response[i].questions});
+                  this.props.setQuestionsCallBack(response[i].questions);
+                  this.setState({question: question});
+                  this.setState({questionInfo: questionInfo});
+                  // console.log(this.state.ideas)
+                }
+              }
+              // console.log("-----------------------------")
+              // console.log(this.state.ideas)
+            })
+          })
+
+
+        }
+
+      }
+
+    })
+
+  }
+
+  decrementQuestionRating = (question, questionInfo, questionRating, questionRated, id) => {
+
+    return fetch('https://idehuh-api.herokuapp.com/users', {
+      method: 'GET', 
+    })
+    .then(response => response.json())
+    .then(response => {
+      // console.log(response[0].name)
+
+      //users begin at id 1
+
+      for(let i = 1; i < response.length; i++) {
+        // console.log(response[i].username)
+        // console.log(response[i].password)
+        if(response[i].username==this.props.username) {
+          // alert(response[i].id)
+
+          let name = response[i].name;
+          let ID = response[i].id;
+          let password = response[i].password;
+          let rating = response[i].rating;
+          let messages = [];
+          let ideas = this.props.ideas;
+          let addQuestionURL = "https://idehuh-api.herokuapp.com/users/" + ID
+
+          let questions = response[i].questions;
+
+          //increment the idea rating of the user
+
+          for(let i = 0; i < questions.length; i++) {
+            //catch if not rated or was upvoted
+            if(questions[i].id == id && ((questionRated == "") || (questionRated=="1U"))) {
+              questions[i].rating = questionRating - 1;
+              //if was upvoted and mean't to decrement then subtract another to compensate to correct starting, then decrement to actual downvote rating
+              if(questionRated == "1U") {
+                questions[i].rating = questionRating - 2;
+              }
+              //was rated with downvote
+              questions[i].rated = "1D";
+              questions[i].question = question
+              questions[i].questionInfo = questionInfo
+            }
+            
+          }
+
+          //make put request to update the ideas array with the changed input
+          const questionObj = {
+            id: ID,
+            name: name,
+            username: this.props.username,
+            password: password,
+            rating: rating,
+            messages: messages,
+            questions: questions,
+            ideas: ideas,
+            followers: [],
+            following: [],
+            savedQuestions: [],
+            savedIdeas: []
+          }
+
+          return fetch(addQuestionURL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(questionObj)
+          })
+          .then(response => {
+            return fetch('https://idehuh-api.herokuapp.com/users', {
+              method: 'GET',
+            })
+            .then(response => response.json())
+            .then(response => {
+              for(let i = 1; i < response.length; i++) {
+                if(response[i].username==this.props.username){
+                  this.setState({questions: response[i].questions});
+                  this.props.setQuestionsCallBack(response[i].questions);
+                  this.setState({question: question});
+                  this.setState({questionInfo: questionInfo});
+                  // console.log(this.state.ideas)
+                }
+              }
+              // console.log("-----------------------------")
+              // console.log(this.state.ideas)
+            })
+          })
+
+
+        }
+
+      }
+
+    })
 
   }
 
@@ -601,7 +803,7 @@ export default class QuestionIdehuhs extends Component{
               , justifyContent : "center", alignItems: "center", borderRadius: 5 ,
               backgroundColor: "black", alignSelf: "center", textAlign : "center"
               }}
-              onPress={()=>{this.replyQuestion(this.state.replyQuestion, this.state.questionToReplyID);}}
+              onPress={()=>{this.replyQuestion(this.state.replyQuestion, this.state.rating, this.state.rated, this.state.questionToReplyID);}}
               >
                 <Text style={{color: "white"}}> Send </Text>
                 </TouchableOpacity>
@@ -644,10 +846,15 @@ export default class QuestionIdehuhs extends Component{
                     <ListItem.Title style = {{ flexDirection: "row"}} >
                         <Button color="red"  title="Remove" onPress={()=>{this.removeQuestion(x.question, x.id)}}></Button>
                         <Button color="orange" title="Edit" onPress={()=>{this.setEditModalVisible(!editModalVisible, x.question, x.questionInfo, x.id)}}></Button>
-                        <Button color="purple" title="Reply" onPress={()=>{this.setReplyModalVisible(!replyModalVisible, x.question, x.id)}}></Button>
+                        <Button color="purple" title="Reply" onPress={()=>{this.setReplyModalVisible(!replyModalVisible, x.question, x.rating, x.rated, x.id)}}></Button>
                         </ListItem.Title>
                   <ListItem.Subtitle> Advice: {x.advice} </ListItem.Subtitle>
                 </ListItem.Content>
+                <View style={{margin: 5, flexDirection: "row"}}>
+                      <Button color="black" title="&#128077;" onPress={()=>{this.incrementQuestionRating(x.question, x.questionInfo, x.rating, x.rated, x.id)}}></Button>
+                      <Text>({x.rating}) </Text>
+                      <Button color="black" title="&#128078;" onPress={()=>{this.decrementQuestionRating(x.question, x.questionInfo, x.rating, x.rated, x.id)}}></Button>
+                    </View>
               </ListItem>
             ))
           }

@@ -20,6 +20,8 @@ export default class IdeaIdehuhs extends Component{
       ideaToEditID: "",
       replyIdea: "",
       ideaToReplyID: "",
+      rating: "",
+      rated: ""
     }
 
   }
@@ -62,10 +64,12 @@ export default class IdeaIdehuhs extends Component{
     this.setState({ editModalVisible: visible });
   }
 
-  setReplyModalVisible = (visible, currIdea, ideaID) => {
+  setReplyModalVisible = (visible, currIdea, rating, rated, ideaID) => {
     this.setState({ replyModalVisible: visible});
     this.setState({ idea: currIdea});
     this.setState({ ideaToReplyID: ideaID});
+    this.setState({ rating: rating});
+    this.setState({ rated: rated});
   }
 
   manageReplyModalVisible = (visible) => {
@@ -109,6 +113,7 @@ export default class IdeaIdehuhs extends Component{
             advice: [],
             adviceObjs: [],
             rating: 0,
+            rated: "",
             // date: moment().format('YYYY-MM-DD HH:MM:SS'),
             date: new Date(),
             keywords: []
@@ -348,7 +353,7 @@ export default class IdeaIdehuhs extends Component{
 
   }
 
-  replyIdea = (reply, id) => {
+  replyIdea = (reply, ratingIdea, ratedIdea, id) => {
 
     return fetch('https://idehuh-api.herokuapp.com/users', {
       method: 'GET', 
@@ -385,6 +390,7 @@ export default class IdeaIdehuhs extends Component{
             ideaInfo: this.state.ideaInfo,
             advice: reply,
             rating: 0,
+            rated: "",
             date: new Date(),
             keywords: []
           };
@@ -411,7 +417,8 @@ export default class IdeaIdehuhs extends Component{
             ideaInfo: this.state.ideaInfo,
             advice: advice,
             adviceObjs: adviceObjs,
-            rating: 0,
+            rating: ratingIdea,
+            rated: ratedIdea,
             // date: moment().format('YYYY-MM-DD HH:MM:SS'),
             date: new Date(),
             keywords: []
@@ -475,6 +482,201 @@ export default class IdeaIdehuhs extends Component{
 
     })
     
+
+  }
+
+  incrementIdeaRating = (idea, ideaInfo, ideaRating, ideaRated, id) => {
+
+    return fetch('https://idehuh-api.herokuapp.com/users', {
+      method: 'GET', 
+    })
+    .then(response => response.json())
+    .then(response => {
+      // console.log(response[0].name)
+
+      //users begin at id 1
+
+      for(let i = 1; i < response.length; i++) {
+        // console.log(response[i].username)
+        // console.log(response[i].password)
+        if(response[i].username==this.props.username) {
+          // alert(response[i].id)
+
+          let name = response[i].name;
+          let ID = response[i].id;
+          let password = response[i].password;
+          let rating = response[i].rating;
+          let messages = [];
+          let questions = this.props.questions;
+          let addIdeaURL = "https://idehuh-api.herokuapp.com/users/" + ID
+
+          let ideas = response[i].ideas;
+
+          //increment the idea rating of the user
+
+          for(let i = 0; i < ideas.length; i++) {
+            //catch if not rated or was downvoted
+            if(ideas[i].id == id && ((ideaRated == "") || (ideaRated == "1D"))) {
+              ideas[i].rating = ideaRating + 1;
+              //if was downvoted, compensate this and increase to desired upvote
+              if(ideaRated == "1D") {
+                ideas[i].rating = ideaRating + 2;
+              }
+              //rated with upvote
+              ideas[i].rated = "1U";
+              ideas[i].idea = idea;
+              ideas[i].ideaInfo = ideaInfo;
+            }
+            
+          }
+
+          //make put request to update the ideas array with the changed input
+          const ideaObj = {
+            id: ID,
+            name: name,
+            username: this.props.username,
+            password: password,
+            rating: rating,
+            messages: messages,
+            questions: questions,
+            ideas: ideas,
+            followers: [],
+            following: [],
+            savedQuestions: [],
+            savedIdeas: []
+          }
+
+          return fetch(addIdeaURL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ideaObj)
+          })
+          .then(response => {
+            return fetch('https://idehuh-api.herokuapp.com/users', {
+              method: 'GET',
+            })
+            .then(response => response.json())
+            .then(response => {
+              for(let i = 1; i < response.length; i++) {
+                if(response[i].username==this.props.username){
+                  this.setState({ideas: response[i].ideas});
+                  this.props.setIdeasCallBack(response[i].ideas);
+                  this.setState({idea: idea});
+                  this.setState({ideaInfo: ideaInfo});
+                  // console.log(this.state.ideas)
+                }
+              }
+              // console.log("-----------------------------")
+              // console.log(this.state.ideas)
+            })
+          })
+
+
+        }
+
+      }
+
+    })
+
+
+  }
+
+  decrementIdeaRating = (idea, ideaInfo, ideaRating, ideaRated, id) => {
+
+    return fetch('https://idehuh-api.herokuapp.com/users', {
+      method: 'GET', 
+    })
+    .then(response => response.json())
+    .then(response => {
+      // console.log(response[0].name)
+
+      //users begin at id 1
+
+      for(let i = 1; i < response.length; i++) {
+        // console.log(response[i].username)
+        // console.log(response[i].password)
+        if(response[i].username==this.props.username) {
+          // alert(response[i].id)
+
+          let name = response[i].name;
+          let ID = response[i].id;
+          let password = response[i].password;
+          let rating = response[i].rating;
+          let messages = [];
+          let questions = this.props.questions;
+          let addIdeaURL = "https://idehuh-api.herokuapp.com/users/" + ID
+
+          let ideas = response[i].ideas;
+
+          //increment the idea rating of the user
+
+          for(let i = 0; i < ideas.length; i++) {
+            //catch if not rated or was upvoted
+            if(ideas[i].id == id && ((ideaRated == "") || (ideaRated == "1U"))) {
+              ideas[i].rating = ideaRating - 1;
+              //if was upvoted and now mean't to decrement subtract another to compensate for this difference to correct downvote rating
+              if(ideaRated == "1U") {
+                ideas[i].rating = ideaRating - 2;
+              }
+              //rated with downvote
+              ideas[i].rated = "1D";
+              ideas[i].idea = idea;
+              ideas[i].ideaInfo = ideaInfo;
+            }
+            
+          }
+
+          //make put request to update the ideas array with the changed input
+          const ideaObj = {
+            id: ID,
+            name: name,
+            username: this.props.username,
+            password: password,
+            rating: rating,
+            messages: messages,
+            questions: questions,
+            ideas: ideas,
+            followers: [],
+            following: [],
+            savedQuestions: [],
+            savedIdeas: []
+          }
+
+          return fetch(addIdeaURL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ideaObj)
+          })
+          .then(response => {
+            return fetch('https://idehuh-api.herokuapp.com/users', {
+              method: 'GET',
+            })
+            .then(response => response.json())
+            .then(response => {
+              for(let i = 1; i < response.length; i++) {
+                if(response[i].username==this.props.username){
+                  this.setState({ideas: response[i].ideas});
+                  this.props.setIdeasCallBack(response[i].ideas);
+                  this.setState({idea: idea});
+                  this.setState({ideaInfo: ideaInfo});
+                  // console.log(this.state.ideas)
+                }
+              }
+              // console.log("-----------------------------")
+              // console.log(this.state.ideas)
+            })
+          })
+
+
+        }
+
+      }
+
+    })
 
   }
 
@@ -601,7 +803,7 @@ export default class IdeaIdehuhs extends Component{
               , justifyContent : "center", alignItems: "center", borderRadius: 5 ,
               backgroundColor: "black", alignSelf: "center", textAlign : "center"
               }}
-              onPress={()=>{this.replyIdea(this.state.replyIdea, this.state.ideaToReplyID);}}
+              onPress={()=>{this.replyIdea(this.state.replyIdea, this.state.rating, this.state.rated, this.state.ideaToReplyID);}}
               >
                 <Text style={{color: "white"}}> Send </Text>
                 </TouchableOpacity>
@@ -644,10 +846,15 @@ export default class IdeaIdehuhs extends Component{
                     <ListItem.Title style = {{ flexDirection: "row"}} >
                         <Button color="red"  title="Remove" onPress={()=>{this.removeIdea(x.idea, x.id)}}></Button>
                         <Button color="orange" title="Edit" onPress={()=>{this.setEditModalVisible(!editModalVisible, x.idea, x.ideaInfo, x.id)}}></Button>
-                        <Button color="purple" title="Reply" onPress={()=>{this.setReplyModalVisible(!replyModalVisible, x.idea, x.id)}}></Button>
+                        <Button color="purple" title="Reply" onPress={()=>{this.setReplyModalVisible(!replyModalVisible, x.idea, x.rating, x.rated, x.id)}}></Button>
                         </ListItem.Title>
                   <ListItem.Subtitle> Advice: {x.advice} </ListItem.Subtitle>
                 </ListItem.Content>
+                <View style={{margin: 5, flexDirection: "row"}}>
+                      <Button color="black" title="&#128077;" onPress={()=>{this.incrementIdeaRating(x.idea, x.ideaInfo, x.rating, x.rated, x.id)}}></Button>
+                      <Text>({x.rating}) </Text>
+                      <Button color="black" title="&#128078;" onPress={()=>{this.decrementIdeaRating(x.idea, x.ideaInfo, x.rating, x.rated, x.id)}}></Button>
+                    </View>
               </ListItem>
             ))
           }
