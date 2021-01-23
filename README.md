@@ -1,24 +1,36 @@
 # idehuh-app
 Idehuh app. I do not give permission to use my code or ideas.
 
-PREMISE:
+----PREMISE:
 Have you ever wondered what to do in certain situations, a question or idea? What if you could have the world give you advice? And get rewarded?
+
 This is where Idehuh comes in! Ide (Idea) + huh (huh? question)
+
 Ask intriguing questions or interesting ideas (measured by upvotes) and increase significantly in rank.
+
 Respond to others questions, be the responder of choice by the asker to also increase rank significantly. Or, be the most upvoted response by the community.
+
 Other cases of responses either marginally increase or decrease your rank depending on the score your response gets (from upvotes and downvotes).
 
-Why does this matter?
-*Incentive/spread of creative thinking, questions, ideas, responses. 
-*Learning from others (possibly high rank users, in that others consistently love their responses) opinions and actions.
-*Companies can gain insight from users that are popular opinionators of a topic(s) (from question/idea opinions)
-*Users and companies can gain insight of what people are interested in or opinions.
-*Analyze interesting ideas questions as well as the data from other modes made by the asker/proposer (voting bar percentages, evaluating an image, video).
+----Why does this matter?
+
+Incentive/spread of creative thinking, questions, ideas, responses. 
+
+Learning from others (possibly high rank users, in that others consistently love their responses) opinions and actions.
+
+Companies can gain insight from users that are popular opinionators of a topic(s) (from question/idea opinions)
+
+Users and companies can gain insight of what people are interested in or opinions.
+
+Analyze interesting ideas questions as well as the data from other modes made by the asker/proposer (voting bar percentages, evaluating an image, video).
 
 
-Rank? Rewards?
+----Rank? Rewards?
 Having high rank means your insight is consistently highly rated. This can be very valuable for companies, marketing, ads, products.
-I anticipate once companies learn more of the app revenue will flow to the app, and those with high rating for their opinions with companies can gain incentives for their opinions. This will create a great feedback loop of great ideas/questions/responses. Win for the app users, companies, and the world!
+
+I anticipate once companies learn more of the app revenue will flow to the app, and those with high rating for their opinions with companies can gain incentives for their opinions. 
+
+This will create a great feedback loop of great ideas/questions/responses. Win for the app users, companies, and the world!
 
 
 RUNNING THE APPLICATION:
