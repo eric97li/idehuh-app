@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ListItem } from 'react-native-elements';
 import { Modal, TouchableHighlight, TouchableOpacity, TextInput, View, Text, Button, ScrollView, StyleSheet} from 'react-native';
 import moment from 'moment';
+import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 
 //Idea tab of Idehuhs Bottom Tab
 
@@ -837,6 +838,8 @@ export default class IdeaIdehuhs extends Component{
           <ScrollView contentContainerStyle={{paddingBottom: 60}}>
           {
             this.state.ideas.map((x, i) => (
+              <Collapse>
+              <CollapseHeader>
               <ListItem key={i} bottomDivider>
                 <ListItem.Content accessible={true}>
                   <ListItem.Title style={{fontSize: 20}}>
@@ -848,7 +851,9 @@ export default class IdeaIdehuhs extends Component{
                         <Button color="orange" title="Edit" onPress={()=>{this.setEditModalVisible(!editModalVisible, x.idea, x.ideaInfo, x.id)}}></Button>
                         <Button color="purple" title="Reply" onPress={()=>{this.setReplyModalVisible(!replyModalVisible, x.idea, x.rating, x.rated, x.id)}}></Button>
                         </ListItem.Title>
-                  <ListItem.Subtitle> Advice: {x.advice} </ListItem.Subtitle>
+                  <View>
+                  <Text style={{marginLeft: "50%", marginTop: "5%", textDecorationLine: 'underline'}}>{x.advice.length} comments</Text>
+                  </View>
                 </ListItem.Content>
                 <View style={{margin: 5, flexDirection: "row"}}>
                       <Button color="black" title="&#128077;" onPress={()=>{this.incrementIdeaRating(x.idea, x.ideaInfo, x.rating, x.rated, x.id)}}></Button>
@@ -856,6 +861,22 @@ export default class IdeaIdehuhs extends Component{
                       <Button color="black" title="&#128078;" onPress={()=>{this.decrementIdeaRating(x.idea, x.ideaInfo, x.rating, x.rated, x.id)}}></Button>
                     </View>
               </ListItem>
+              </CollapseHeader>
+              <CollapseBody>
+              {
+              x.advice.map((y, t) =>(
+                <ListItem key={t} bottomDivider>
+                  <ListItem.Content accessible={true}>
+                    <ListItem.Title>
+                      {y}
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              ))
+              
+              }
+              </CollapseBody>
+              </Collapse>
             ))
           }
           </ScrollView>
