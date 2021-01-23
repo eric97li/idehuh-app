@@ -16,6 +16,11 @@ Why does this matter?
 *Analyze interesting ideas questions as well as the data from other modes made by the asker/proposer (voting bar percentages, evaluating an image, video).
 
 
+Rank? Rewards?
+Having high rank means your insight is consistently highly rated. This can be very valuable for companies, marketing, ads, products.
+I anticipate once companies learn more of the app revenue will flow to the app, and those with high rating for their opinions with companies can gain incentives for their opinions. This will create a great feedback loop of great ideas/questions/responses. Win for the app users, companies, and the world!
+
+
 RUNNING THE APPLICATION:
 
 The app currently only works on android device.
