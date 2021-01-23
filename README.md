@@ -32,6 +32,11 @@ This is where Idehuh comes in! Ide (Idea) + huh (huh? question)
 *I anticipate once companies learn more of the app, revenue will flow to the app, and those with high rating for their opinions with companies can gain incentives for their opinions. This will create a great feedback loop of great ideas/questions/responses. Win for the app users, companies, and the world!
 
 
+----Idehuh API: https://github.com/eric97li/idehuh-app-api
+json file deployed to Heroku as an api endpoint to /users that I used to build up Idehuh. There is no database currently so the storage is temporary at the moment.
+https://idehuh-api.herokuapp.com/
+
+
 RUNNING THE APPLICATION:
 
 The app currently only works on android device.
