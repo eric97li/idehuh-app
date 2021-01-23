@@ -12,7 +12,7 @@ This is where Idehuh comes in! Ide (Idea) + huh (huh? question)
 
 *Other cases of responses either marginally increase or decrease your rank depending on the score your response gets (from upvotes and downvotes).
 
-----Why does this matter?
+----WHY DOES THIS MATTER?
 
 *Incentive/spread of creative thinking, questions, ideas, responses. 
 
@@ -25,7 +25,7 @@ This is where Idehuh comes in! Ide (Idea) + huh (huh? question)
 *Analyze interesting ideas questions as well as the data from other modes made by the asker/proposer (voting bar percentages, evaluating an image, video).
 
 
-----Rank? Rewards?
+----RANK? REWARDS?
 
 *Having high rank means your insight is consistently highly rated. This can be very valuable for companies, marketing, ads, products.
 
