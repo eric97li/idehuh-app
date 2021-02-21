@@ -1,6 +1,8 @@
 # idehuh-app
 Idehuh app. I do not give permission to use my code or ideas.
 
+Context and demo of Idehuh: https://youtu.be/ECtGTdww_0s
+
 ----PREMISE:
 Have you ever wondered what to do in certain situations, a question or idea? What if you could have the world give you advice? And get rewarded?
 
