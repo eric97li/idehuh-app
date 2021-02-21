@@ -1,5 +1,5 @@
 # idehuh-app
-Idehuh app. I do not give permission to use my code or ideas.
+Idehuh app
 
 Context and demo of Idehuh: https://youtu.be/ECtGTdww_0s
 
